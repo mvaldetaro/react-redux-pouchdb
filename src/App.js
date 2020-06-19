@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { PureComponent } from "react";
+import "./App.css";
+import IndexView from "./views/IndexView";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends PureComponent {
+  state = {
+    notes: {
+      1: {
+        _id: 1,
+        title: "Hello Word do sucesso!",
+        body:
+          "PouchDB is a JavaScript-based database that runs on the server and on the browser and that is able to sync when the network is available.",
+        updateAt: new Date(),
+      },
+      2: {
+        _id: 2,
+        title: "Javacript",
+        body: "Build Offline-First Apps for Web and React Native",
+        updateAt: new Date(),
+      },
+    },
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <IndexView notes={this.state.notes} />
+      </div>
+    );
+  }
 }
 
 export default App;
