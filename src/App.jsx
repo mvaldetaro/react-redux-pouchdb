@@ -18,19 +18,26 @@ class App extends PureComponent {
   };
 
    handleSave = async (pNote) => {
-    let {id} = await this.db.createNote(pNote);
+    let xRes = {};
 
-    pNote._id = id;
+    if(pNote._id) {
+      xRes = await this.db.updateNote(pNote);
+    } else {
+      xRes = await this.db.createNote(pNote);
+    }
+
+    pNote._id = xRes.id;
+    pNote._rev = xRes.rev;
 
     const { notes } = this.state;
     this.setState({
       notes: {
         ...notes,
-        [id]: pNote
+        [xRes.id]: pNote
       }
     })
 
-    return id;
+    return xRes.id;
   }
 
   handleRemove = async (pNote) => {
@@ -73,6 +80,13 @@ class App extends PureComponent {
             path="/new"
             component={(props) => (
               <NewView {...props} onSave={this.handleSave}  />
+            )}
+          />
+          <Route
+            exact
+            path="/update/:id"
+            component={(props) => (
+              <NewView {...props} note={this.state.notes[props.match.params.id]} onSave={this.handleSave}  />
             )}
           />
           </div>

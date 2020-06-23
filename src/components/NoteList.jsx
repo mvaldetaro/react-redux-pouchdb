@@ -11,7 +11,7 @@ class NoteList extends PureComponent {
         return (
             <div>
                 {Object.values(this.props.notes).map((pNote) =>  <div key={pNote._id}>
-                        <h2><Link to={`/notes/${pNote._id}`}>{pNote.title}</Link> <button onClick={() => this.handleRemove(pNote)}>Remover</button></h2>
+                        <h2><Link to={`/notes/${pNote._id}`}>{pNote.title}</Link> <Link to={`/update/${pNote._id}`}><button type='button'>Editar</button></Link> <button onClick={() => this.handleRemove(pNote)}>Remover</button></h2>
                     </div>
                 )}
             </div>

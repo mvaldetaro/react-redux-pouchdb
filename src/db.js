@@ -24,10 +24,13 @@ export default class DB {
   }
 
   async removeNote(pNote) {
-    let note = await this.db.remove(pNote);
-    console.log(note);
-    return note;
+    const res = await this.db.remove(pNote);
+    return res;
   }
 
-  async updateNote(pNote) {}
+  async updateNote(pNote) {
+    pNote.updateAt = new Date();
+    const res = await this.db.put(pNote);
+    return res;
+  }
 }
