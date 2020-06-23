@@ -29,8 +29,26 @@ export default class DB {
   }
 
   async updateNote(pNote) {
+    console.log(pNote);
     pNote.updateAt = new Date();
     const res = await this.db.put(pNote);
+
+    console.log(res);
+
+    return res;
+  }
+
+  async revisions(pId) {
+    console.log(pId);
+
+    const res = await this.db.get(String(pId), {
+      revs: true,
+      revs_info: true,
+      open_revs: "all",
+    });
+
+    console.log(res);
+
     return res;
   }
 }

@@ -9,11 +9,16 @@ class NoteView extends PureComponent {
             return null;
         }
 
+        const xRevs = this.props.onRevisions(note._id);
+        console.log(xRevs);
+
         return (
             <div>
                 <h1>{ note.title }</h1>
                 <div>{ note.body }</div>
             </div>
+
+            
         );
     }
 }
