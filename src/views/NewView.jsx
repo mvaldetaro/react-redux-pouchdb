@@ -20,10 +20,10 @@ class NewView extends PureComponent {
         })
     }
 
-    handleSave = (pEvent) => {
+    handleSave = async (pEvent) => {
         pEvent.preventDefault();
 
-        const id = this.props.onSave(this.state.note);
+        const id = await this.props.onSave(this.state.note);
         this.props.history.replace(`/notes/${id}`);
     }
 

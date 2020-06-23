@@ -6,38 +6,27 @@ import IndexView from "./views/IndexView";
 import NoteView from "./views/NoteView";
 import NewView from "./views/NewView";
 
+import DB from "./db";
 import NavBar from "./components/NavBar";
 
 class App extends PureComponent {
+  db = new DB('Notes');
+
   state = {
-    notes: {
-      1: {
-        _id: 1,
-        title: "Hello Word do sucesso!",
-        body:
-          "PouchDB is a JavaScript-based database that runs on the server and on the browser and that is able to sync when the network is available.",
-        updateAt: new Date(),
-      },
-      2: {
-        _id: 2,
-        title: "Javacript",
-        body: "Build Offline-First Apps for Web and React Native",
-        updateAt: new Date(),
-      },
-    },
+    notes: {},
+    loading: true
   };
 
-  handleSave = (note) => {
-    let ids = Object.keys(this.state.notes);
-    const id = Math.max(...ids) + 1;
+   handleSave = async (pNote) => {
+    let {id} = await this.db.createNote(pNote);
 
-    note['_id'] = id;
+    pNote._id = id;
 
     const { notes } = this.state;
     this.setState({
       notes: {
         ...notes,
-        [id]: note
+        [id]: pNote
       }
     })
 
@@ -45,12 +34,19 @@ class App extends PureComponent {
 
   }
 
-  render() {
+  async componentDidMount() {
+    const notes = await this.db.getAllNotes();
+    this.setState({notes, loading: false});
+  }
+
+  renderContent() {
+
+    if(this.state.loading) {
+      return <h2>Carregando...</h2>
+    }
+
     return (
-      <BrowserRouter>
-        <div className="app">
-          <NavBar/>
-          <div className="routes"></div>
+      <div className="routes">
           <Route
             exact
             path="/"
@@ -72,6 +68,16 @@ class App extends PureComponent {
               <NewView {...props} onSave={this.handleSave}  />
             )}
           />
+          </div>
+    )
+  }
+
+  render() {
+    return (
+      <BrowserRouter>
+        <div className="app">
+          <NavBar/>
+          {this.renderContent()}
         </div>
       </BrowserRouter>
     );
