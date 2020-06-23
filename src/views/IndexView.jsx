@@ -5,7 +5,7 @@ class IndexView extends PureComponent {
         return (
             <div>
                 <h1>Notas</h1>
-                <NoteList notes={this.props.notes}/>
+                <NoteList notes={this.props.notes} onRemove={this.props.onRemove}/>
             </div>
         );
     }

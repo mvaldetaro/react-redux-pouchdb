@@ -31,6 +31,13 @@ class App extends PureComponent {
     })
 
     return id;
+  }
+
+  handleRemove = async (pNote) => {
+    await this.db.removeNote(pNote);
+    const notes = await this.db.getAllNotes();
+
+    this.setState({notes});
 
   }
 
@@ -51,7 +58,7 @@ class App extends PureComponent {
             exact
             path="/"
             component={(props) => (
-              <IndexView {...props} notes={this.state.notes} />
+              <IndexView {...props} notes={this.state.notes} onRemove={this.handleRemove} />
             )}
           />
           <Route

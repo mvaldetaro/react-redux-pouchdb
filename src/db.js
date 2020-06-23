@@ -22,4 +22,12 @@ export default class DB {
 
     return res;
   }
+
+  async removeNote(pNote) {
+    let note = await this.db.remove(pNote);
+    console.log(note);
+    return note;
+  }
+
+  async updateNote(pNote) {}
 }
