@@ -11,17 +11,17 @@ import NavBar from "./components/NavBar";
 import FindBar from "./components/FindBar";
 
 class App extends PureComponent {
-  db = new DB('Notes');
+  db = new DB("Notes");
 
   state = {
     notes: {},
-    loading: true
+    loading: true,
   };
 
   handleSave = async (pNote) => {
     let xRes = {};
 
-    if(pNote._id) {
+    if (pNote._id) {
       xRes = await this.db.updateNote(pNote);
     } else {
       xRes = await this.db.createNote(pNote);
@@ -34,34 +34,41 @@ class App extends PureComponent {
     this.setState({
       notes: {
         ...notes,
-        [xRes.id]: pNote
-      }
-    })
+        [xRes.id]: pNote,
+      },
+    });
 
     return xRes.id;
-  }
+  };
 
   handleRemove = async (pNote) => {
     await this.db.removeNote(pNote);
     const notes = await this.db.getAllNotes();
 
-    this.setState({notes});
-  }
+    this.setState({ notes });
+  };
+
+  handleFind = async (pValue) => {
+    const notes = await this.db.search(pValue);
+
+    console.log(notes);
+
+    //this.setState({notes});
+  };
 
   getRevisions = async (pId) => {
     const xRevs = await this.db.revisions(pId);
     return xRevs;
-  }
+  };
 
   async componentDidMount() {
     const notes = await this.db.getAllNotes();
-    this.setState({notes, loading: false});
+    this.setState({ notes, loading: false });
   }
 
   renderContent() {
-
-    if(this.state.loading) {
-      return <h2>Carregando...</h2>
+    if (this.state.loading) {
+      return <h2>Carregando...</h2>;
     }
 
     return (
@@ -70,40 +77,50 @@ class App extends PureComponent {
           exact
           path="/"
           component={(props) => (
-            <IndexView {...props} notes={this.state.notes} onRemove={this.handleRemove} />
+            <IndexView
+              {...props}
+              notes={this.state.notes}
+              onRemove={this.handleRemove}
+            />
           )}
         />
         <Route
           exact
           path="/notes/:id"
           component={(props) => (
-            <NoteView {...props} note={this.state.notes[props.match.params.id]} onRevisions={this.getRevisions} />
+            <NoteView
+              {...props}
+              note={this.state.notes[props.match.params.id]}
+              onRevisions={this.getRevisions}
+            />
           )}
         />
         <Route
           exact
           path="/new"
-          component={(props) => (
-            <NewView {...props} onSave={this.handleSave}  />
-          )}
+          component={(props) => <NewView {...props} onSave={this.handleSave} />}
         />
         <Route
           exact
           path="/update/:id"
           component={(props) => (
-            <NewView {...props} note={this.state.notes[props.match.params.id]} onSave={this.handleSave}  />
+            <NewView
+              {...props}
+              note={this.state.notes[props.match.params.id]}
+              onSave={this.handleSave}
+            />
           )}
         />
       </div>
-    )
+    );
   }
 
   render() {
     return (
       <BrowserRouter>
         <div className="app">
-          <NavBar/>
-          <FindBar />
+          <NavBar />
+          <FindBar onFind={this.handleFind} />
           {this.renderContent()}
         </div>
       </BrowserRouter>

@@ -1,4 +1,6 @@
 import PouchDB from "pouchdb";
+import find from "pouchdb-find";
+PouchDB.plugin(find);
 
 export default class DB {
   constructor(name) {
@@ -45,6 +47,20 @@ export default class DB {
       revs: true,
       revs_info: true,
       open_revs: "all",
+    });
+
+    console.log(res);
+
+    return res;
+  }
+
+  async search(pValue) {
+    console.log(pValue);
+
+    const res = await this.db.find({
+      selector: {
+        title: { $regex: String(pValue) },
+      },
     });
 
     console.log(res);
