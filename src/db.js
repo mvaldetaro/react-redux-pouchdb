@@ -25,6 +25,12 @@ export default class DB {
     return res;
   }
 
+  async readOneNote(pId) {
+    const res = await this.db.get(pId);
+
+    return res;
+  }
+
   async removeNote(pNote) {
     const res = await this.db.remove(pNote);
     return res;
