@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import "./App.css";
+import { Provider } from "react-redux";
+import store from "../src/store";
 
 import IndexView from "./views/IndexView";
 import NoteView from "./views/NoteView";
@@ -10,6 +11,7 @@ import DB from "./db";
 import NavBar from "./components/NavBar";
 import FindBar from "./components/FindBar";
 
+import "./App.css";
 class App extends PureComponent {
   db = new DB("Notes");
 
@@ -117,13 +119,15 @@ class App extends PureComponent {
 
   render() {
     return (
-      <BrowserRouter>
-        <div className="app">
-          <NavBar />
-          <FindBar onFind={this.handleFind} />
-          {this.renderContent()}
-        </div>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <div className="app">
+            <NavBar />
+            <FindBar onFind={this.handleFind} />
+            {this.renderContent()}
+          </div>
+        </BrowserRouter>
+      </Provider>
     );
   }
 }
