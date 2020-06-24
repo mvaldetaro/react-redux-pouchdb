@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+
 import store from "../src/store";
+import { acAddNote } from "./reducers/actions";
 
 import IndexView from "./views/IndexView";
 import NoteView from "./views/NoteView";
@@ -12,6 +14,7 @@ import NavBar from "./components/NavBar";
 import FindBar from "./components/FindBar";
 
 import "./App.css";
+
 class App extends PureComponent {
   db = new DB("Notes");
 
@@ -54,8 +57,12 @@ class App extends PureComponent {
     const notes = await this.db.search(pValue);
 
     console.log(notes);
-
     //this.setState({notes});
+  };
+
+  actionAddNote = (pNote) => {
+    acAddNote(pNote);
+    //store.dispatch(xReducer);
   };
 
   getRevisions = async (pId) => {
@@ -63,9 +70,13 @@ class App extends PureComponent {
     return xRevs;
   };
 
-  async componentDidMount() {
+  getNotes = async () => {
     const notes = await this.db.getAllNotes();
     this.setState({ notes, loading: false });
+  };
+
+  async componentDidMount() {
+    await this.getNotes();
   }
 
   renderContent() {
@@ -100,7 +111,9 @@ class App extends PureComponent {
         <Route
           exact
           path="/new"
-          component={(props) => <NewView {...props} onSave={this.handleSave} />}
+          component={(props) => (
+            <NewView {...props} onSave={this.actionAddNote} />
+          )}
         />
         <Route
           exact
