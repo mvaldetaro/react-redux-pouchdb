@@ -1,3 +1,5 @@
+import reducer from "../middleware/reducer";
+
 const initState = {
   notes: {},
 };
@@ -29,4 +31,4 @@ function notes(state = initState, action) {
   }
 }
 
-export default notes;
+export default reducer(notes);

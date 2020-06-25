@@ -1,7 +1,7 @@
-import persister from "../middleware/persister";
+import { setItem } from "../middleware/persister";
 
 export async function acAddNote(pData) {
-  await persister({
+  await setItem({
     type: "ADD_NOTE",
     payload: pData,
   });

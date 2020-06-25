@@ -7,12 +7,10 @@ class NewView extends PureComponent {
         super(props);
         this.state = {
             note: {
-                _id: props.note ? props.note._id : null,
-                _rev: props.note ? props.note._rev : null,
+                //_id: uuidv4(),
+                // _rev: props.note ? props.note._rev : null,
                 title: props.note ? props.note.title : '',
                 body: props.note ? props.note.body : '',
-                createAt: props.note ? props.note.createAt : undefined,
-                updateAt: props.note ? props.note.updateAt : undefined,
             }
         }
     }
