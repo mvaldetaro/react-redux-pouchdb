@@ -2,8 +2,9 @@ import React, { PureComponent } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
+import { NotesProvider } from "./contexts/notesContext";
+
 import store from "../src/store";
-import { acAddNote } from "./reducers/actions";
 
 import IndexView from "./views/IndexView";
 import NoteView from "./views/NoteView";
@@ -58,11 +59,6 @@ class App extends PureComponent {
 
     console.log(notes);
     //this.setState({notes});
-  };
-
-  actionAddNote = (pNote) => {
-    acAddNote(pNote);
-    //store.dispatch(xReducer);
   };
 
   getRevisions = async (pId) => {

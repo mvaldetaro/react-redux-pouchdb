@@ -1,9 +1,12 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
-
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { acRemoveNote } from "../reducers/actions";
 class NoteList extends PureComponent {
   handleRemove = (pNote) => {
-    this.props.onRemove(pNote);
+    // this.props.onRemove(pNote);
+    this.props.acRemoveNote(pNote);
   };
 
   render() {
@@ -25,4 +28,16 @@ class NoteList extends PureComponent {
   }
 }
 
-export default NoteList;
+const mapStateToProps = state => {
+  return {
+      notes: state.notes,
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({
+    acRemoveNote,
+  }, dispatch);
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteList);
