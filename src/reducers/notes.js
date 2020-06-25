@@ -1,29 +1,27 @@
-import reducer from "../middleware/reducer";
-
 const initState = {
-  notes: {},
+  data: {},
 };
 
 function notes(state = initState, action) {
-  const xNotes = { ...state.notes };
+  const xNotes = { ...state.data };
+
   switch (action.type) {
     case "ADD_NOTE":
-      console.log(action);
       return {
-        notes: {
-          ...state.notes,
+        data: {
+          ...state.data,
           [action.payload._id]: action.payload,
         },
       };
     case "REMOVE_NOTE":
       delete xNotes[action.payload._id];
       return {
-        notes: xNotes,
+        data: xNotes,
       };
     case "UPDATE_NOTE":
       xNotes[action.payload._id] = action.payload;
       return {
-        notes: xNotes,
+        data: xNotes,
       };
 
     default:
@@ -31,4 +29,4 @@ function notes(state = initState, action) {
   }
 }
 
-export default reducer(notes);
+export default notes;

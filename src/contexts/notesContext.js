@@ -1,5 +1,5 @@
 import React, { useState, createContext } from "react";
-import store from "../store";
+import { store } from "../store";
 import { acAddNote, acRemoveNote, acUpdateNote } from "../reducers/actions";
 
 const actions = {

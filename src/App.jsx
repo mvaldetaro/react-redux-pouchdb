@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+// import { NotesProvider } from "./contexts/notesContext";
 
-import { NotesProvider } from "./contexts/notesContext";
-
-import store from "../src/store";
+import { store, persistor } from "./store";
 
 import IndexView from "./views/IndexView";
 import NoteView from "./views/NoteView";
@@ -17,63 +17,63 @@ import FindBar from "./components/FindBar";
 import "./App.css";
 
 class App extends PureComponent {
-  db = new DB("Notes");
+  //db = new DB("Notes");
 
   state = {
     notes: {},
-    loading: true,
+    loading: false,
   };
 
-  handleSave = async (pNote) => {
-    let xRes = {};
+  // handleSave = async (pNote) => {
+  //   let xRes = {};
 
-    if (pNote._id) {
-      xRes = await this.db.updateNote(pNote);
-    } else {
-      xRes = await this.db.createNote(pNote);
-    }
+  //   if (pNote._id) {
+  //     xRes = await this.db.updateNote(pNote);
+  //   } else {
+  //     xRes = await this.db.createNote(pNote);
+  //   }
 
-    pNote._id = xRes.id;
-    pNote._rev = xRes.rev;
+  //   pNote._id = xRes.id;
+  //   pNote._rev = xRes.rev;
 
-    const { notes } = this.state;
-    this.setState({
-      notes: {
-        ...notes,
-        [xRes.id]: pNote,
-      },
-    });
+  //   const { notes } = this.state;
+  //   this.setState({
+  //     notes: {
+  //       ...notes,
+  //       [xRes.id]: pNote,
+  //     },
+  //   });
 
-    return xRes.id;
-  };
+  //   return xRes.id;
+  // };
 
-  handleRemove = async (pNote) => {
-    await this.db.removeNote(pNote);
-    const notes = await this.db.getAllNotes();
+  // handleRemove = async (pNote) => {
+  //   await this.db.removeNote(pNote);
+  //   const notes = await this.db.getAllNotes();
 
-    this.setState({ notes });
-  };
+  //   this.setState({ notes });
+  // };
 
-  handleFind = async (pValue) => {
-    const notes = await this.db.search(pValue);
+  // handleFind = async (pValue) => {
+  //   const notes = await this.db.search(pValue);
 
-    console.log(notes);
-    //this.setState({notes});
-  };
+  //   console.log(notes);
+  //   //this.setState({notes});
+  // };
 
-  getRevisions = async (pId) => {
-    const xRevs = await this.db.revisions(pId);
-    return xRevs;
-  };
+  // getRevisions = async (pId) => {
+  //   const xRevs = await this.db.revisions(pId);
+  //   return xRevs;
+  // };
 
-  getNotes = async () => {
-    const notes = await this.db.getAllNotes();
-    this.setState({ notes, loading: false });
-  };
+  // getNotes = async () => {
+  //   const notes = await this.db.getAllNotes();
+  //   this.setState({ notes, loading: false });
+  // };
 
-  async componentDidMount() {
-    await this.getNotes();
-  }
+  // async componentDidMount() {
+  //   await this.getNotes();
+  // }
 
   renderContent() {
     if (this.state.loading) {
@@ -89,7 +89,7 @@ class App extends PureComponent {
             <IndexView
               {...props}
               notes={this.state.notes}
-              onRemove={this.handleRemove}
+              //onRemove={this.handleRemove}
             />
           )}
         />
@@ -100,16 +100,13 @@ class App extends PureComponent {
             <NoteView
               {...props}
               note={this.state.notes[props.match.params.id]}
-              onRevisions={this.getRevisions}
             />
           )}
         />
         <Route
           exact
           path="/new"
-          component={(props) => (
-            <NewView {...props} onSave={this.actionAddNote} />
-          )}
+          component={(props) => <NewView {...props} />}
         />
         <Route
           exact
@@ -118,7 +115,6 @@ class App extends PureComponent {
             <NewView
               {...props}
               note={this.state.notes[props.match.params.id]}
-              onSave={this.handleSave}
             />
           )}
         />
@@ -129,13 +125,15 @@ class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <BrowserRouter>
-          <div className="app">
-            <NavBar />
-            <FindBar onFind={this.handleFind} />
-            {this.renderContent()}
-          </div>
-        </BrowserRouter>
+        <PersistGate loading={null} persistor={persistor}>
+          <BrowserRouter>
+            <div className="app">
+              <NavBar />
+              <FindBar onFind={this.handleFind} />
+              {this.renderContent()}
+            </div>
+          </BrowserRouter>
+        </PersistGate>
       </Provider>
     );
   }
